@@ -5,6 +5,19 @@ Syntax: [instruction] [registerOperands] {memoryAddress}
 (registerOperands has to have the form regA,regB, *WITHOUT* any spaces between
 regA, the comma and regB.
 
+You can locate your code wherever in the 8-bit address space you want. In order
+to change the location where a specific piece of code will be stored,
+use the .start macro, whose syntax is described below:
+
+.start [address]
+
+Note that base-10 is used for instructions that accept addresses as operands
+(like JMP, CALL, BNE, BEQ and .start).
+
+TODO: Allow any radix to be used. (Especially hex)
+
+Comments can be added by prefixing a line with an apostrophe (').
+
 A comprehensive list of all nopCPU instructions can be found at:
 https://github.com/infiniteNOP/nopCPU/blob/master/HACKING
 

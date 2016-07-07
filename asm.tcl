@@ -55,6 +55,10 @@ proc operandDecode {operands} {
 
 proc instrDecode {line} {
     set parts [split $line " "]
+    # Before we even begin, let's check whether we got a comment:
+    if {[string range $line 0 0] == "'"} {
+        return -257
+    }
     if {[llength $parts] == "2"} {
         set instruction [lindex $parts 0]
         set operands [lindex $parts 1]
@@ -63,6 +67,12 @@ proc instrDecode {line} {
         set o_addy_ldu [string range $operands 2 end]
     } else {
         return -code error -errorinfo "Invalid instruction length" -errorcode "-1"
+    }
+    # Decode macros:
+    if {$instruction == ".start"} {return [expr {-$operands}]}
+    # Special case: not only takes one operand:
+    if {$instruction == "not"} {
+        return [expr {32 | [lut_msb $operands]}]
     }
     # Everything is alright! We can begin decoding our instruction.
     set lsb [operandDecode $operands]
@@ -88,8 +98,7 @@ proc instrDecode {line} {
     if {$lsb == -1} {
         if {$msb > 0x70} {
             return $msb
-        }
-        else {
+        } else {
             return -code error -errorinfo "Fatal: Unknown operands" -errorcode "-3"
         }
     } 
@@ -144,8 +153,22 @@ set z 0
 set infile [open [lindex $argv 0] r]
 while {[gets $infile data] >= 0} {
     set line [string trim $data]
-    set eeprom [lreplace $eeprom $z $z [instrDecode $line]]
-    incr z
+    set nval [instrDecode $line]
+    # Check if we encountered a commend. If yes, do not increment z,
+    # and do not store anything.
+    if {$nval == -257} {
+        set z $z
+    } else {
+        # Perhaps we were requested to change address?
+        if {$nval < 0} {
+            set z [expr {-$nval}]
+        } else {
+            foreach a $nval {
+                set eeprom [lreplace $eeprom $z $z $a]
+                incr z
+            }
+        }
+    }
 }
 close $infile
 
