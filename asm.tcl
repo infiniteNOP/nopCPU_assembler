@@ -154,7 +154,7 @@ set infile [open [lindex $argv 0] r]
 while {[gets $infile data] >= 0} {
     set line [string trim $data]
     set nval [instrDecode $line]
-    # Check if we encountered a commend. If yes, do not increment z,
+    # Check if we encountered a comment. If yes, do not increment z,
     # and do not store anything.
     if {$nval == -257} {
         set z $z
