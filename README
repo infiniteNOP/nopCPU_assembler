@@ -1,2 +1,11 @@
 Trivial assembler for nopCPU. Licensed under the CDDL license.
 For more details, see the COPYING file.
+
+Syntax: [instruction] [registerOperands] {memoryAddress}
+(registerOperands has to have the form regA,regB, *WITHOUT* any spaces between
+regA, the comma and regB.
+
+A comprehensive list of all nopCPU instructions can be found at:
+https://github.com/infiniteNOP/nopCPU/blob/master/HACKING
+
+TODO: Make syntax more flexible

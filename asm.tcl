@@ -108,7 +108,7 @@ if {$argc < 2} {
 # set a pu
 # set b ts
 # $a$b "Hello, World!"
-# (And I don't know if I have properly prevented this kind of situations.
+# (And I don't know if I have properly prevented such situations.
 
 if {[lindex $argv 2] != "y"} {
     puts "DISCLAIMER! PLEASE READ!\n"
